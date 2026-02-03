@@ -3547,8 +3547,10 @@ MonoBehaviour:
   cameraInput: {x: 0, y: 0}
   cameraInputX: 0
   cameraInputY: 0
+  moveAmount: 0
   verticalInput: 0
   horizontalInput: 0
+  run_Input: 0
 --- !u!114 &7556490683035015769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3561,7 +3563,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b48953fc630796845b0058d1cb9e3083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementManager
-  movementSpeed: 7
+  inAirTimer: 0
+  leapingVelocity: 3
+  fallingVelocity: 33
+  rayCastHeightOffSett: 0.5
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  maxDistance: 1
+  isRunning: 0
+  isGrounded: 0
+  walkingSpeed: 2
+  runningSpeed: 7
   rotationSpeed: 15
 --- !u!114 &1749617240390802659
 MonoBehaviour:
@@ -3575,6 +3588,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65ad5e8d6f01f86418a5061bfa2cad48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
+  isInteracting: 0
 --- !u!114 &4936047664252075095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3618,7 +3632,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 455192687288636832}
   serializedVersion: 5
-  m_Mass: 4
+  m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
