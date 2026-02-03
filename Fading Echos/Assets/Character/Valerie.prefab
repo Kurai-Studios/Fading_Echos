@@ -138,15 +138,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4199b921ab319964aafeb2e282fd40ea, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.07933
+      value: 1.09
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4199b921ab319964aafeb2e282fd40ea, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.321
+      value: -0.024
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4199b921ab319964aafeb2e282fd40ea, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.55396
+      value: 1.69
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4199b921ab319964aafeb2e282fd40ea, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3564,16 +3564,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementManager
   inAirTimer: 0
-  leapingVelocity: 3
+  leapingVelocity: 20
   fallingVelocity: 33
-  rayCastHeightOffSett: 0.5
+  rayCastHeightOffSett: 0.2
   groundLayer:
     serializedVersion: 2
     m_Bits: 1
   maxDistance: 1
+  groundCheckRadius: 0.3
   isRunning: 0
-  isGrounded: 0
-  walkingSpeed: 2
+  isGrounded: 1
+  walkingSpeed: 3
   runningSpeed: 7
   rotationSpeed: 15
 --- !u!114 &1749617240390802659
@@ -3621,9 +3622,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.18610072
-  m_Height: 1.7606951
+  m_Height: 1.6844172
   m_Direction: 1
-  m_Center: {x: -0.0019609928, y: 0.81830925, z: 0}
+  m_Center: {x: -0.0019609928, y: 0.8564482, z: 0}
 --- !u!54 &8873008003452647244
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3650,4 +3651,4 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2

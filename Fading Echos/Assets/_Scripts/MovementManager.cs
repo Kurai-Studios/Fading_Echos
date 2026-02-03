@@ -12,11 +12,12 @@ public class MovementManager : MonoBehaviour
 
     [Header("Falling")]
     public float inAirTimer;
-    public float leapingVelocity;
-    public float fallingVelocity;
+    public float fallingVelocity = 25f;
     public float rayCastHeightOffSett = 0.5f;
     public LayerMask groundLayer;
     public float maxDistance = 1;
+    public float groundCheckRadius = 0.3f;
+
 
     [Header ("Movement Flags")]
     public bool isRunning;
@@ -34,6 +35,9 @@ public class MovementManager : MonoBehaviour
         inputManager = GetComponent<InputManager>();
         rb = GetComponent<Rigidbody>();
         cameraObject = Camera.main.transform;
+
+        rb.useGravity = false;
+        rb.isKinematic = false;
     }
 
     private void FixedUpdate()
@@ -45,7 +49,7 @@ public class MovementManager : MonoBehaviour
     {
         HandleFallingAndLanding();
 
-        if (playerManager.isInteracting || !isGrounded)
+        if (playerManager.isInteracting)
         {
             return;
         }
@@ -56,7 +60,6 @@ public class MovementManager : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (!isGrounded) return;
         moveDirection = cameraObject.forward * inputManager.verticalInput;
         moveDirection = moveDirection + cameraObject.right * inputManager.horizontalInput;
         moveDirection.Normalize();
@@ -77,7 +80,7 @@ public class MovementManager : MonoBehaviour
 
     private void HandleRotation()
     {
-        if (!isGrounded) return;
+
         Vector3 targetDirection = Vector3.zero;
 
         targetDirection = cameraObject.forward * inputManager.verticalInput;
@@ -98,37 +101,74 @@ public class MovementManager : MonoBehaviour
 
     private void HandleFallingAndLanding()
     {
-        
-        RaycastHit hit;
-        Vector3 rayCastOrigin = transform.position;
-        rayCastOrigin.y = rayCastOrigin.y + rayCastHeightOffSett;
+        bool wasGrounded = isGrounded;
 
-        if (!isGrounded)
+        Vector3 sphereCastOrigin = transform.position;
+        sphereCastOrigin.y += rayCastHeightOffSett;
+        RaycastHit hit;
+        bool sphereCastHit = Physics.SphereCast(sphereCastOrigin, groundCheckRadius, -Vector3.up, out hit,
+                                                maxDistance + rayCastHeightOffSett, groundLayer);
+
+        bool feetCheck = Physics.CheckSphere(transform.position - new Vector3(0, 0.1f, 0), groundCheckRadius, groundLayer);
+        
+        isGrounded = sphereCastHit || feetCheck;
+
+        Debug.DrawRay(sphereCastOrigin, -Vector3.up * (maxDistance + rayCastHeightOffSett),
+                     isGrounded ? Color.green : Color.red);
+
+        if (!wasGrounded && isGrounded)
         {
+            Debug.Log("LANDED - Playing Landing animation");
+            if (!playerManager.isInteracting)
+            {
+                animatorManager.PlayTargetAnimation("Landing", true);
+            }
+
+            inAirTimer = 0;
+            //hasAppliedLeap = false;
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+        }
+        else if (wasGrounded && !isGrounded)
+        {
+            Debug.Log("STARTED FALLING - Playing Fall animation");
             if (!playerManager.isInteracting)
             {
                 animatorManager.PlayTargetAnimation("Fall", true);
             }
-
-            inAirTimer = inAirTimer + Time.deltaTime;
-            rb.AddForce(transform.forward * leapingVelocity);
-            rb.AddForce(-Vector3.up * fallingVelocity * inAirTimer);
-
-            if (Physics.SphereCast(rayCastOrigin, 0.2f, -Vector3.up, out hit, maxDistance, groundLayer))
-            {
-                if (!isGrounded && playerManager.isInteracting)
-                {
-                    animatorManager.PlayTargetAnimation("Landing", true);
-                }
-
-                inAirTimer = 0;
-                isGrounded = true;
-                playerManager.isInteracting = false;
-            }
-            else
-            {
-                isGrounded = false;
-            }
         }
+
+        if (!isGrounded)
+        {
+            inAirTimer += Time.deltaTime;
+            float gravityForce = fallingVelocity * inAirTimer * Time.deltaTime;
+            rb.linearVelocity += Vector3.down * gravityForce;
+            float maxFallSpeed = 50f;
+
+            if (rb.linearVelocity.y < -maxFallSpeed)
+            {
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, -maxFallSpeed, rb.linearVelocity.z);
+            }
+
+            Debug.Log($"Falling - Velocity Y: {rb.linearVelocity.y}, inAirTimer: {inAirTimer}");
+        }
+        else
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, -2f, rb.linearVelocity.z);
+            inAirTimer = 0;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying) return;
+
+        // Draw ground check sphere
+        Gizmos.color = isGrounded ? Color.green : Color.red;
+        Gizmos.DrawWireSphere(transform.position - new Vector3(0, 0.1f, 0), groundCheckRadius);
+
+        // Draw sphere cast
+        Vector3 origin = transform.position + new Vector3(0, rayCastHeightOffSett, 0);
+        Gizmos.DrawWireSphere(origin, groundCheckRadius);
+        Gizmos.DrawLine(origin, origin - new Vector3(0, maxDistance + rayCastHeightOffSett, 0));
     }
 }
