@@ -22,11 +22,17 @@ public class MovementManager : MonoBehaviour
     [Header ("Movement Flags")]
     public bool isRunning;
     public bool isGrounded;
+    public bool isJumping;
 
     [Header ("Movement Speeds")]
     public float walkingSpeed = 1.5f;
     public float runningSpeed = 5f;
     public float rotationSpeed = 15f;
+
+    [Header("Jump Speeds")]
+    public float jumpHeight = 3;
+    public float gravityIntensity = -15;
+    public float airControl = 0.5f;
 
     private void Awake()
     {
@@ -54,12 +60,24 @@ public class MovementManager : MonoBehaviour
             return;
         }
 
+        /*if (isJumping)
+        {
+            return;
+        }*/
+
         HandleMovement();
-        HandleRotation();  
+        HandleRotation();
+        //HandleJumping();
     }
 
     private void HandleMovement()
     {
+        if (isJumping)
+        {
+            //HandleAirControl();
+            return;
+        }
+
         moveDirection = cameraObject.forward * inputManager.verticalInput;
         moveDirection = moveDirection + cameraObject.right * inputManager.horizontalInput;
         moveDirection.Normalize();
@@ -78,8 +96,28 @@ public class MovementManager : MonoBehaviour
         rb.linearVelocity = movementVelocity;
     }
 
+    /*private void HandleAirControl()
+    {
+        Vector3 airDirection = cameraObject.forward * inputManager.verticalInput;
+        airDirection += cameraObject.right * inputManager.horizontalInput;
+        airDirection.y = 0;
+
+        if (airDirection.magnitude > 0.1f)
+        {
+            airDirection.Normalize();
+            float airSpeed = isRunning ? runningSpeed * 0.5f : walkingSpeed * 0.5f;
+            Vector3 airVelocity = airDirection * airSpeed;
+
+            rb.linearVelocity = new Vector3(airVelocity.x, rb.linearVelocity.y, airVelocity.z);
+        }
+    }*/
+
     private void HandleRotation()
     {
+        if (isJumping)
+        {
+            return;
+        }
 
         Vector3 targetDirection = Vector3.zero;
 
@@ -113,6 +151,12 @@ public class MovementManager : MonoBehaviour
         
         isGrounded = sphereCastHit || feetCheck;
 
+        if (isGrounded && isJumping && rb.linearVelocity.y <= 0)
+        {
+            isJumping = false;
+            animatorManager.animator.SetBool("isJumping", false);
+        }
+
         Debug.DrawRay(sphereCastOrigin, -Vector3.up * (maxDistance + rayCastHeightOffSett),
                      isGrounded ? Color.green : Color.red);
 
@@ -125,10 +169,9 @@ public class MovementManager : MonoBehaviour
             }
 
             inAirTimer = 0;
-            //hasAppliedLeap = false;
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
         }
-        else if (wasGrounded && !isGrounded)
+        else if (wasGrounded && !isGrounded && !isJumping)
         {
             Debug.Log("STARTED FALLING - Playing Fall animation");
             if (!playerManager.isInteracting)
@@ -137,11 +180,16 @@ public class MovementManager : MonoBehaviour
             }
         }
 
-        if (!isGrounded)
+        if (!isGrounded || isJumping)
         {
             inAirTimer += Time.deltaTime;
-            float gravityForce = fallingVelocity * inAirTimer * Time.deltaTime;
-            rb.linearVelocity += Vector3.down * gravityForce;
+
+            if (!isJumping || rb.linearVelocity.y <= 0)
+            {
+                float gravityForce = fallingVelocity * inAirTimer * Time.deltaTime;
+                rb.linearVelocity += Vector3.down * gravityForce;
+            }
+
             float maxFallSpeed = 50f;
 
             if (rb.linearVelocity.y < -maxFallSpeed)
@@ -149,12 +197,29 @@ public class MovementManager : MonoBehaviour
                 rb.linearVelocity = new Vector3(rb.linearVelocity.x, -maxFallSpeed, rb.linearVelocity.z);
             }
 
-            Debug.Log($"Falling - Velocity Y: {rb.linearVelocity.y}, inAirTimer: {inAirTimer}");
+            Debug.Log($"In Air - Velocity Y: {rb.linearVelocity.y}, isJumping: {isJumping}, inAirTimer: {inAirTimer}");
         }
         else
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, -2f, rb.linearVelocity.z);
             inAirTimer = 0;
+        }
+    }
+
+    public void HandleJumping()
+    {
+        if (isGrounded && !isJumping)
+        {
+            isJumping = true;
+            animatorManager.animator.SetBool("isJumping", true);
+            animatorManager.PlayTargetAnimation("Jump", false);
+
+            float jumpingVelocity = Mathf.Sqrt(-2 * gravityIntensity * jumpHeight);
+            Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+            rb.linearVelocity = new Vector3(horizontalVelocity.x, jumpingVelocity, horizontalVelocity.z);
+            inAirTimer = 0;
+
+            Debug.Log($"JUMPING! Velocity: {jumpingVelocity}");
         }
     }
 
