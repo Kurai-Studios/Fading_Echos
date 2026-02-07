@@ -5,6 +5,7 @@ public class RunState : MovementState
     public override void EnterState(TMovementManager TMovementStateManager)
     {
         TMovementStateManager.TAnimator.SetBool("Running", true);
+        TMovementStateManager.TAnimator.SetBool("Aiming", true);
     }
 
     public override void UpdateState(TMovementManager TMovementStateManager)
@@ -31,6 +32,7 @@ public class RunState : MovementState
     void ExitState(TMovementManager TMovementStateManager, MovementState TState)
     {
         TMovementStateManager.TAnimator.SetBool("Running", false);
+        TMovementStateManager.TAnimator.SetBool("Aiming", false);
         TMovementStateManager.SwitchState(TState);
     }
 }

@@ -27,8 +27,19 @@ public class TAimManager : MonoBehaviour
 
     [HideInInspector] public Animator animator;
 
+    [HideInInspector] public CinemachineCamera vCam;
+    [HideInInspector] public float hipFov;
+    [HideInInspector] public float currentFov;
+
+    [Header("Aim Zoom")]
+    public float adsFov = 40;
+    public float fovSmootness = 10;
+
+
     void Start()
     {
+        vCam = GetComponentInChildren<CinemachineCamera>();
+        hipFov = vCam.Lens.FieldOfView;
         animator = GetComponentInChildren<Animator>();
         SwitchState(Hip);
     }
@@ -46,6 +57,8 @@ public class TAimManager : MonoBehaviour
         yAxis.Value += mouseY * ySpeed * Time.deltaTime;
 
         yAxis.Value = Mathf.Clamp(yAxis.Value, minYAngle, maxYAngle);
+
+        vCam.Lens.FieldOfView = Mathf.Lerp(vCam.Lens.FieldOfView, currentFov, fovSmootness * Time.deltaTime);
 
         currentState.UpdateState(this);
     }
