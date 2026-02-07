@@ -21,6 +21,7 @@ public class IdleState : MovementState
             }
         }
 
+
         if (Input.GetKeyDown(KeyCode.C))
         {
             TMovementStateManager.SwitchState(TMovementStateManager.TCrouch);

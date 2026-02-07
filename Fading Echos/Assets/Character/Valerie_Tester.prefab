@@ -688,6 +688,10 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: -6211354928034128476, guid: 4199b921ab319964aafeb2e282fd40ea, type: 3}
+      propertyPath: m_Name
+      value: Hips
+      objectReference: {fileID: 0}
+    - target: {fileID: -6211354928034128476, guid: 4199b921ab319964aafeb2e282fd40ea, type: 3}
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
@@ -2965,7 +2969,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 4199b921ab319964aafeb2e282fd40ea, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 4199b921ab319964aafeb2e282fd40ea, type: 3}
       propertyPath: m_Controller
@@ -3550,6 +3554,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4199b921ab319964aafeb2e282fd40ea, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4520019502507188002}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4199b921ab319964aafeb2e282fd40ea, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4168447026755179836}
   m_SourcePrefab: {fileID: 100100000, guid: 4199b921ab319964aafeb2e282fd40ea, type: 3}
 --- !u!1 &455192687288636832 stripped
 GameObject:
@@ -3616,13 +3623,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad25ff7feca639e4fb67a5d856e561f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TMovementManager
-  moveSpeed: 3
+  currentMoveSpeed: 0
+  walkSpeed: 3
+  walkBackSpeed: 2
+  runSpeed: 5
+  runBackSpeed: 4
+  crouchSpeed: 2
+  crouchBackSpeed: 1
   dir: {x: 0, y: 0, z: 0}
+  hzInput: 0
+  vInput: 0
   groundYOffSet: -0.01
   groundMask:
     serializedVersion: 2
     m_Bits: 256
   gravity: -9.81
+  TAnimator: {fileID: 0}
+--- !u!114 &4168447026755179836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 455192687288636832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b82133bacb65ddc45bd7f26bc345adad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TAimManager
+  xAxis:
+    Value: 0
+    Center: 0
+    Range: {x: -180, y: 180}
+    Wrap: 1
+    Recentering:
+      Enabled: 0
+      Wait: 0
+      Time: 0
+    Restrictions: 0
+  yAxis:
+    Value: 0
+    Center: 0
+    Range: {x: -60, y: 60}
+    Wrap: 0
+    Recentering:
+      Enabled: 0
+      Wait: 0
+      Time: 0
+    Restrictions: 0
+  camFollowPos: {fileID: 7000662875311907970}
+  xSpeed: 300
+  ySpeed: 300
+  horizontalInput: Mouse X
+  verticalInput: Mouse Y
+  minYAngle: -35
+  maxYAngle: 35
+  animator: {fileID: 0}
 --- !u!4 &944344126344761114 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4199b921ab319964aafeb2e282fd40ea, type: 3}

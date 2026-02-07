@@ -32,7 +32,7 @@ public class CrouchState : MovementState
         }
         else
         {
-            TMovementStateManager.currentMoveSpeed = TMovementStateManager.walkSpeed;
+            TMovementStateManager.currentMoveSpeed = TMovementStateManager.crouchSpeed;
         }
     }
 
