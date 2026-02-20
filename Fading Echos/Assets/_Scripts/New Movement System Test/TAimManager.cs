@@ -35,12 +35,16 @@ public class TAimManager : MonoBehaviour
     public float adsFov = 40;
     public float fovSmootness = 10;
 
+    [SerializeField] Transform aimPos;
+    [SerializeField] float aimSmoothSpeed = 20;
+    [SerializeField] LayerMask aimMask;
+
 
     void Start()
     {
         vCam = GetComponentInChildren<CinemachineCamera>();
         hipFov = vCam.Lens.FieldOfView;
-        animator = GetComponentInChildren<Animator>();
+        animator = GetComponent<Animator>();
         SwitchState(Hip);
     }
 
@@ -59,6 +63,14 @@ public class TAimManager : MonoBehaviour
         yAxis.Value = Mathf.Clamp(yAxis.Value, minYAngle, maxYAngle);
 
         vCam.Lens.FieldOfView = Mathf.Lerp(vCam.Lens.FieldOfView, currentFov, fovSmootness * Time.deltaTime);
+
+        Vector2 screenCentre = new Vector2(Screen.width / 2, Screen.height / 2);
+        Ray ray = Camera.main.ScreenPointToRay(screenCentre);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, aimMask))
+        {
+            aimPos.position = Vector3.Lerp(aimPos.position, hit.point, aimSmoothSpeed * Time.deltaTime);
+        }
 
         currentState.UpdateState(this);
     }

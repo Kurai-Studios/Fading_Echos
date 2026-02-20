@@ -31,7 +31,7 @@ public class TMovementManager : MonoBehaviour
 
     void Start()
     {
-        TAnimator = GetComponentInChildren<Animator>();
+        TAnimator = GetComponent<Animator>();
         valerieController = GetComponent<CharacterController>();
         SwitchState(TIdle);
     }
