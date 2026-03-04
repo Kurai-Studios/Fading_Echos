@@ -35,7 +35,7 @@ public class TAimManager : MonoBehaviour
     public float adsFov = 40;
     public float fovSmootness = 10;
 
-    [SerializeField] Transform aimPos;
+    public Transform aimPos;
     [SerializeField] float aimSmoothSpeed = 20;
     [SerializeField] LayerMask aimMask;
 
