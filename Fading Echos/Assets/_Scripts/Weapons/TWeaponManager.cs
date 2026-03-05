@@ -14,9 +14,14 @@ public class TWeaponManager : MonoBehaviour
     [SerializeField] int bulletPerShot;
     TAimManager aim;
 
+    TWeaponAmmo ammo;
+    TActionStateManager actions;
+
     void Start()
     {
         aim = GetComponentInParent<TAimManager>();
+        ammo = GetComponent<TWeaponAmmo>();
+        actions = GetComponentInParent<TActionStateManager>();
         fireRateTimer = fireRate;
     }
 
@@ -26,21 +31,18 @@ public class TWeaponManager : MonoBehaviour
         {
             Fire();
         }
+        Debug.Log(ammo.currentAmmo);
     }
 
     bool ShouldFire()
     {
         fireRateTimer += Time.deltaTime;
 
-        if (fireRateTimer < fireRate)
+        if (fireRateTimer < fireRate || ammo.currentAmmo == 0 || actions.currentState == actions.Reload)
         {
             return false;
         }
-        if (semiAuto && Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            return true;
-        }
-        if (!semiAuto && Input.GetKey(KeyCode.Mouse0))
+        if (semiAuto && Input.GetKeyDown(KeyCode.Mouse0) || !semiAuto && Input.GetKey(KeyCode.Mouse0))
         {
             return true;
         }
@@ -53,6 +55,7 @@ public class TWeaponManager : MonoBehaviour
         fireRateTimer = 0;
 
         barrelPos.LookAt(aim.aimPos);
+        ammo.currentAmmo--;
 
         for(int i = 0; i < bulletPerShot; i++)
         {
