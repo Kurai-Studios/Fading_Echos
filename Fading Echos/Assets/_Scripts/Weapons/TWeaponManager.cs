@@ -16,11 +16,13 @@ public class TWeaponManager : MonoBehaviour
 
     TWeaponAmmo ammo;
     TActionStateManager actions;
+    TWeaponRecoil recoil;
 
     void Start()
     {
         aim = GetComponentInParent<TAimManager>();
         ammo = GetComponent<TWeaponAmmo>();
+        recoil = GetComponent<TWeaponRecoil>();
         actions = GetComponentInParent<TActionStateManager>();
         fireRateTimer = fireRate;
     }
@@ -55,6 +57,7 @@ public class TWeaponManager : MonoBehaviour
         fireRateTimer = 0;
 
         barrelPos.LookAt(aim.aimPos);
+        recoil.TriggerRecoil();
         ammo.currentAmmo--;
 
         for(int i = 0; i < bulletPerShot; i++)
