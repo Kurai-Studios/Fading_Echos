@@ -39,9 +39,19 @@ public class TAimManager : MonoBehaviour
     [SerializeField] float aimSmoothSpeed = 20;
     [SerializeField] LayerMask aimMask;
 
+    float xFollowPos;
+    float yFollowPos;
+    float ogYPos;
+    [SerializeField] float crouchCamHeight = 0.6f;
+    [SerializeField] float shoulderSwapSpeed = 10;
+    TMovementManager moving;
 
     void Start()
     {
+        moving = GetComponent<TMovementManager>();
+        xFollowPos = camFollowPos.localPosition.x;
+        ogYPos = camFollowPos.localPosition.y;
+        yFollowPos = ogYPos;
         vCam = GetComponentInChildren<CinemachineCamera>();
         hipFov = vCam.Lens.FieldOfView;
         animator = GetComponent<Animator>();
@@ -50,7 +60,7 @@ public class TAimManager : MonoBehaviour
 
     void Update()
     {
-        // Get input
+
         float mouseX = Input.GetAxis(horizontalInput);
         float mouseY = Input.GetAxis(verticalInput);
 
@@ -72,6 +82,8 @@ public class TAimManager : MonoBehaviour
             aimPos.position = Vector3.Lerp(aimPos.position, hit.point, aimSmoothSpeed * Time.deltaTime);
         }
 
+        MoveCamera();
+
         currentState.UpdateState(this);
     }
 
@@ -85,5 +97,26 @@ public class TAimManager : MonoBehaviour
     {
         currentState = state;
         currentState.EnterState(this);
+    }
+
+    void MoveCamera()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            xFollowPos = -xFollowPos; 
+        }
+
+        if (moving.currentState == moving.TCrouch)
+        {
+            yFollowPos = crouchCamHeight;
+        }
+        else
+        {
+            yFollowPos = ogYPos;
+        }
+
+        Vector3 newFollowPos = new Vector3(xFollowPos, yFollowPos, camFollowPos.localPosition.z);
+        camFollowPos.localPosition = Vector3.Lerp(camFollowPos.localPosition, newFollowPos, shoulderSwapSpeed * Time.deltaTime);
+
     }
 }

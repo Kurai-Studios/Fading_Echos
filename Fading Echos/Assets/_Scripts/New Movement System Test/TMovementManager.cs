@@ -20,7 +20,7 @@ public class TMovementManager : MonoBehaviour
     [SerializeField] float gravity = -9.81f;
     Vector3 velocity;
 
-    MovementState currentState;
+    public MovementState currentState;
 
     public IdleState TIdle = new IdleState();
     public WalkState TWalk = new WalkState();
@@ -83,7 +83,7 @@ public class TMovementManager : MonoBehaviour
         }
         else if (velocity.y < 0)
         {
-            velocity.y = -2;
+            velocity.y = -4;
         }
 
         valerieController.Move(velocity * Time.deltaTime);
