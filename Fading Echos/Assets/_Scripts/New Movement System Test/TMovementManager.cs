@@ -7,6 +7,7 @@ public class TMovementManager : MonoBehaviour
     public float walkSpeed = 3, walkBackSpeed = 2;
     public float runSpeed = 5, runBackSpeed = 4;
     public float crouchSpeed = 2, crouchBackSpeed = 1;
+    public float airSpeed = 1.5f;
 
     [HideInInspector] public Vector3 dir;
     [HideInInspector] public float hzInput;
@@ -18,14 +19,18 @@ public class TMovementManager : MonoBehaviour
     Vector3 spherePos;
 
     [SerializeField] float gravity = -9.81f;
+    [SerializeField] float jumpForce = 10;
+    [HideInInspector] public bool jumped;
     Vector3 velocity;
 
+    public MovementState previousState;
     public MovementState currentState;
 
     public IdleState TIdle = new IdleState();
     public WalkState TWalk = new WalkState();
     public RunState TRun = new RunState();
     public CrouchState TCrouch = new CrouchState();
+    public JumpState TJump = new JumpState();
 
     [HideInInspector] public Animator TAnimator;
 
@@ -40,6 +45,7 @@ public class TMovementManager : MonoBehaviour
     {
         GetDirectionAndMove();
         Gravity();
+        Falling();
 
         TAnimator.SetFloat("hzInput", hzInput);
         TAnimator.SetFloat("vInput", vInput);
@@ -57,13 +63,21 @@ public class TMovementManager : MonoBehaviour
     {
         hzInput = Input.GetAxis("Horizontal");
         vInput = Input.GetAxis("Vertical");
+        Vector3 airDir = Vector3.zero;
 
-        dir = transform.forward * vInput + transform.right * hzInput;
+        if (!IsGrounded())
+        {
+            airDir = transform.forward * vInput + transform.right * hzInput;
+        }
+        else
+        {
+            dir = transform.forward * vInput + transform.right * hzInput;
+        }
 
-        valerieController.Move(dir.normalized * currentMoveSpeed * Time.deltaTime);
+        valerieController.Move((dir.normalized * currentMoveSpeed + airDir.normalized * airSpeed) * Time.deltaTime);
     }
 
-    bool IsGrounded()
+    public bool IsGrounded()
     {
         spherePos = new Vector3(transform.position.x, transform.position.y - groundYOffSet, transform.position.z);
         
@@ -83,10 +97,25 @@ public class TMovementManager : MonoBehaviour
         }
         else if (velocity.y < 0)
         {
-            velocity.y = -4;
+            velocity.y = -2;
         }
 
         valerieController.Move(velocity * Time.deltaTime);
+    }
+
+    void Falling()
+    {
+        TAnimator.SetBool("Falling", !IsGrounded());
+    }
+
+    public void JumpForce()
+    {
+        velocity.y += jumpForce;
+    }
+
+    public void Jumped()
+    {
+        jumped = true;
     }
 
     /*private void OnDrawGizmos()

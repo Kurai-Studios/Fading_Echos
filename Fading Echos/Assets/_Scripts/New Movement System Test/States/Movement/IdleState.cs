@@ -26,5 +26,11 @@ public class IdleState : MovementState
         {
             TMovementStateManager.SwitchState(TMovementStateManager.TCrouch);
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            TMovementStateManager.previousState = this;
+            TMovementStateManager.SwitchState(TMovementStateManager.TJump);
+        }
     }
 }
