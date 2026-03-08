@@ -19,6 +19,8 @@ public class TWeaponManager : MonoBehaviour
     TActionStateManager actions;
     TWeaponRecoil recoil;
 
+    public float enemyKickbackForce = 100;
+
     void Start()
     {
         aim = GetComponentInParent<TAimManager>();
@@ -66,6 +68,7 @@ public class TWeaponManager : MonoBehaviour
             GameObject currentBullet = Instantiate(bullet, barrelPos.position, barrelPos.rotation);
             TBullet bulletScript = currentBullet.GetComponent<TBullet>();
             bulletScript.weaponM = this;
+            bulletScript.dir = barrelPos.transform.forward;
             Rigidbody rb = currentBullet.GetComponent<Rigidbody>();
             rb.AddForce(barrelPos.forward * bulletVelocity, ForceMode.Impulse);
         }
