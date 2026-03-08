@@ -12,6 +12,7 @@ public class TWeaponManager : MonoBehaviour
     [SerializeField] Transform barrelPos;
     [SerializeField] float bulletVelocity;
     [SerializeField] int bulletPerShot;
+    public float rifleDamage = 20;
     TAimManager aim;
 
     TWeaponAmmo ammo;
@@ -33,7 +34,7 @@ public class TWeaponManager : MonoBehaviour
         {
             Fire();
         }
-        Debug.Log(ammo.currentAmmo);
+        //Debug.Log(ammo.currentAmmo);
     }
 
     bool ShouldFire()
@@ -63,6 +64,8 @@ public class TWeaponManager : MonoBehaviour
         for(int i = 0; i < bulletPerShot; i++)
         {
             GameObject currentBullet = Instantiate(bullet, barrelPos.position, barrelPos.rotation);
+            TBullet bulletScript = currentBullet.GetComponent<TBullet>();
+            bulletScript.weaponM = this;
             Rigidbody rb = currentBullet.GetComponent<Rigidbody>();
             rb.AddForce(barrelPos.forward * bulletVelocity, ForceMode.Impulse);
         }
