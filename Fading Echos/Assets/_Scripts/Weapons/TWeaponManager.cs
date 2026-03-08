@@ -15,19 +15,34 @@ public class TWeaponManager : MonoBehaviour
     public float rifleDamage = 20;
     TAimManager aim;
 
-    TWeaponAmmo ammo;
+    [HideInInspector] public TWeaponAmmo ammo;
     TActionStateManager actions;
     TWeaponRecoil recoil;
 
     public float enemyKickbackForce = 100;
 
+    public Transform leftHandTarget, leftHandHint;
+    TWeaponClassManager weaponClass;
+
     void Start()
     {
         aim = GetComponentInParent<TAimManager>();
-        ammo = GetComponent<TWeaponAmmo>();
-        recoil = GetComponent<TWeaponRecoil>();
         actions = GetComponentInParent<TActionStateManager>();
         fireRateTimer = fireRate;
+    }
+
+    private void OnEnable()
+    {
+        if (weaponClass == null)
+        {
+            weaponClass = GetComponentInParent<TWeaponClassManager>();
+            // Future audioSource
+            ammo = GetComponent<TWeaponAmmo>();
+            recoil = GetComponent<TWeaponRecoil>();
+            recoil.recoilFollowPos = weaponClass.recoilFollowPos;
+        }
+
+        weaponClass.SetCurrentWeapon(this);
     }
 
     void Update()

@@ -7,8 +7,8 @@ public class TActionStateManager : MonoBehaviour
     public ReloadState Reload = new ReloadState();
     public DefaultState Default = new DefaultState();
 
-    public GameObject currentWeapon;
-    [HideInInspector]public TWeaponAmmo ammo;
+    [HideInInspector] public TWeaponManager currentWeapon;
+    [HideInInspector] public TWeaponAmmo ammo;
 
     [HideInInspector] public Animator anim;
 
@@ -18,7 +18,6 @@ public class TActionStateManager : MonoBehaviour
     void Start()
     {
         SwitchState(Default);
-        ammo = currentWeapon.GetComponent<TWeaponAmmo>();
         anim = GetComponent<Animator>();
     }
 
@@ -37,5 +36,12 @@ public class TActionStateManager : MonoBehaviour
     {
         ammo.Reload();
         SwitchState(Default);
+    }
+
+    public void SetWeapon(TWeaponManager weapon)
+    {
+        currentWeapon = weapon;
+        ammo = weapon.ammo;
+        // future audioSource
     }
 }

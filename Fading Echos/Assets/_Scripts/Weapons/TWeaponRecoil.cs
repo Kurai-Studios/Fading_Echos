@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class TWeaponRecoil : MonoBehaviour
 {
-    [SerializeField] Transform recoilFollowPos;
+    [HideInInspector] public Transform recoilFollowPos;
     [SerializeField] float kickBackAmount = -1;
     [SerializeField] float kickBackSpeed = 10;
     [SerializeField] float returnSpeed = 20;
     float currentRecoilPos;
     float finalRecoilPos;
+
 
     void Update()
     {
