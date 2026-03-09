@@ -58,7 +58,8 @@ public class TWeaponManager : MonoBehaviour
     {
         fireRateTimer += Time.deltaTime;
 
-        if (fireRateTimer < fireRate || ammo.currentAmmo == 0 || actions.currentState == actions.Reload)
+        if (fireRateTimer < fireRate ||  ammo.currentAmmo == 0 || 
+            actions.currentState == actions.Reload || actions.currentState == actions.Swap)
         {
             return false;
         }

@@ -6,6 +6,7 @@ public class TActionStateManager : MonoBehaviour
     [HideInInspector]public ActionBaseState currentState;
     public ReloadState Reload = new ReloadState();
     public DefaultState Default = new DefaultState();
+    public WSwapState Swap = new WSwapState();
 
     [HideInInspector] public TWeaponManager currentWeapon;
     [HideInInspector] public TWeaponAmmo ammo;

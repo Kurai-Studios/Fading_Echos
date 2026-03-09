@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 87ed341504fb9814cb9ba0fa48d5afc7
+guid: 9508166463aa519469f93bc58cc94219
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -7,8 +7,28 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: L96_Sniper_Rifle
-    second: {fileID: 2100000, guid: 8a1d2e8819fc1244c8a36ff79c8acfd6, type: 2}
+      name: blinn1
+    second: {fileID: 2100000, guid: 384488093ba55fa409579ae96558961b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: blinn2
+    second: {fileID: 2100000, guid: 5bfac592142e9764bbb17fe82812efcc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: blinn3
+    second: {fileID: 2100000, guid: 4fc408a8894f53b4abc44d5c45c035ba, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: blinn4
+    second: {fileID: 2100000, guid: b2b94b7595e21794e9c7e61b111c1137, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1
+    second: {fileID: 2100000, guid: 5ff44c8dea13acf4b9a5411ebe6560dc, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
