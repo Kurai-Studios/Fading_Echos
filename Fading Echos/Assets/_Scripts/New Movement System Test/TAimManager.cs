@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Cinemachine;
 using System.Diagnostics;
+using UnityEngine.Animations.Rigging;
 
 public class TAimManager : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class TAimManager : MonoBehaviour
     [SerializeField] private float maxYAngle = 35f;
 
     [HideInInspector] public Animator animator;
+    MultiAimConstraint[] multiAims;
+    WeightedTransform aimPosWeightedT;
 
     [HideInInspector] public CinemachineCamera vCam;
     [HideInInspector] public float hipFov;
@@ -35,7 +38,7 @@ public class TAimManager : MonoBehaviour
     public float adsFov = 40;
     public float fovSmootness = 10;
 
-    public Transform aimPos;
+    [HideInInspector]public Transform aimPos;
     [SerializeField] float aimSmoothSpeed = 20;
     [SerializeField] LayerMask aimMask;
 
@@ -45,6 +48,26 @@ public class TAimManager : MonoBehaviour
     [SerializeField] float crouchCamHeight = 0.6f;
     [SerializeField] float shoulderSwapSpeed = 10;
     TMovementManager moving;
+
+
+    private void Awake()
+    {
+        aimPos = new GameObject().transform;
+        aimPos.name = "AimPosition";
+
+        aimPosWeightedT.transform = aimPos;
+        aimPosWeightedT.weight = 1;
+
+        multiAims = GetComponentsInChildren<MultiAimConstraint>();
+
+        foreach (MultiAimConstraint constraint in multiAims)
+        {
+            var data = constraint.data.sourceObjects;
+            data.Clear();
+            data.Add(aimPosWeightedT);
+            constraint.data.sourceObjects = data;
+        }
+    }
 
     void Start()
     {
