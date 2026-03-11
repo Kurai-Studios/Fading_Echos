@@ -81,6 +81,20 @@ public class EnemyHealth : MonoBehaviour
         anim.SetBool("isWalking", false);
         anim.SetTrigger("dead");
         Debug.Log("Enemy Dead!");
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+
+        if (player != null)
+        {
+            TWeaponAmmo weaponAmmo = player.GetComponentInChildren<TWeaponAmmo>();
+
+            if (weaponAmmo != null)
+            {
+                weaponAmmo.extraAmmo += 30;
+                Debug.Log("Added 30 ammo from enemy death!");
+            }
+        }
+
         StartCoroutine(DespawnEnemy());
     }
 
