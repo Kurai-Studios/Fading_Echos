@@ -74,6 +74,11 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
+    public void DamagePlayer()
+    {
+        Player.GetComponent<THealthManager>().TakeDamage(20f);
+    }
+
     void EnemyDeath()
     {
         isDead = true;
@@ -103,6 +108,7 @@ public class EnemyHealth : MonoBehaviour
         isAttacking = true;
         Agent.isStopped = true;
         anim.SetTrigger("Attack");
+        DamagePlayer();
 
         yield return new WaitForSeconds(attackInterval);
 
