@@ -34,6 +34,8 @@ public class TMovementManager : MonoBehaviour
 
     [HideInInspector] public Animator TAnimator;
 
+    public bool isDead = false;
+
     void Start()
     {
         TAnimator = GetComponent<Animator>();
@@ -43,6 +45,9 @@ public class TMovementManager : MonoBehaviour
 
     void Update()
     {
+
+        if (isDead) return;
+
         GetDirectionAndMove();
         Gravity();
         Falling();
