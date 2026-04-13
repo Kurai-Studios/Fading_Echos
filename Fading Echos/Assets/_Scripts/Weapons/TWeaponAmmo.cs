@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class TWeaponAmmo : MonoBehaviour
@@ -6,9 +7,13 @@ public class TWeaponAmmo : MonoBehaviour
     public int extraAmmo;
     public int currentAmmo;
 
+    [Header("UI")]
+    public TextMeshProUGUI ammoText;
+
     void Start()
     {
         currentAmmo = clipSize;
+        UpdateAmmoUI();
     }
 
     public void Reload()
@@ -25,7 +30,7 @@ public class TWeaponAmmo : MonoBehaviour
             {
                 int leftOverAmmon = extraAmmo + currentAmmo - clipSize;
                 extraAmmo = leftOverAmmon;
-                currentAmmo = leftOverAmmon;
+                currentAmmo = clipSize;
             }
             else
             {
@@ -33,5 +38,18 @@ public class TWeaponAmmo : MonoBehaviour
                 extraAmmo = 0;
             }
         }
+
+        UpdateAmmoUI();
+    }
+
+    public void UpdateAmmoUI()
+    {
+        if (ammoText != null)
+            ammoText.text = $"{currentAmmo} / {extraAmmo}";
+
+        TWeaponManager weaponManager = GetComponent<TWeaponManager>();
+
+        if (weaponManager != null && weaponManager.weaponUI != null)
+            weaponManager.weaponUI.UpdateAmmoDisplay(currentAmmo, extraAmmo);
     }
 }

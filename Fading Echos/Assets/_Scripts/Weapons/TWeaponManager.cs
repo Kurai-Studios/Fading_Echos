@@ -24,6 +24,9 @@ public class TWeaponManager : MonoBehaviour
     public Transform leftHandTarget, leftHandHint;
     TWeaponClassManager weaponClass;
 
+    [Header("UI")]
+    public TWeaponUI weaponUI;
+
     void Start()
     {
         aim = GetComponentInParent<TAimManager>();
@@ -40,9 +43,15 @@ public class TWeaponManager : MonoBehaviour
             ammo = GetComponent<TWeaponAmmo>();
             recoil = GetComponent<TWeaponRecoil>();
             recoil.recoilFollowPos = weaponClass.recoilFollowPos;
+
+            if (weaponUI == null)
+                weaponUI = FindFirstObjectByType<TWeaponUI>();
         }
 
         weaponClass.SetCurrentWeapon(this);
+
+        if (ammo != null && weaponUI != null)
+            weaponUI.UpdateAmmoDisplay(ammo.currentAmmo, ammo.extraAmmo);
     }
 
     void Update()
@@ -79,7 +88,10 @@ public class TWeaponManager : MonoBehaviour
         recoil.TriggerRecoil();
         ammo.currentAmmo--;
 
-        for(int i = 0; i < bulletPerShot; i++)
+        if (weaponUI != null)
+            weaponUI.UpdateAmmoDisplay(ammo.currentAmmo, ammo.extraAmmo);
+
+        for (int i = 0; i < bulletPerShot; i++)
         {
             GameObject currentBullet = Instantiate(bullet, barrelPos.position, barrelPos.rotation);
             TBullet bulletScript = currentBullet.GetComponent<TBullet>();
