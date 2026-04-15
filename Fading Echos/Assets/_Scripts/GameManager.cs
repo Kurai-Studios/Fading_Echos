@@ -1,6 +1,8 @@
-using UnityEngine;
-using Unity.Cinemachine;
+using System.Collections;
 using TMPro;
+using Unity.Cinemachine;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -55,6 +57,7 @@ public class GameManager : MonoBehaviour
     {
         gameEnded = true;
         Debug.Log("YOU WIN!");
+        GameOverMenu();
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -65,7 +68,21 @@ public class GameManager : MonoBehaviour
         gameEnded = true;
         Debug.Log("YOU LOST!");
 
+        StartCoroutine(Change());
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+
+    public void GameOverMenu()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    public IEnumerator Change()
+    {
+        yield return new WaitForSeconds(5f);
+
+        GameOverMenu();
     }
 }
