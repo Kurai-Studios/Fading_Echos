@@ -24,11 +24,15 @@ public class TWeaponManager : MonoBehaviour
     public Transform leftHandTarget, leftHandHint;
     TWeaponClassManager weaponClass;
 
+    [SerializeField] AudioClip gunshot;
+    AudioSource audioSource;
+
     [Header("UI")]
     public TWeaponUI weaponUI;
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         aim = GetComponentInParent<TAimManager>();
         actions = GetComponentInParent<TActionStateManager>();
         fireRateTimer = fireRate;
@@ -85,6 +89,7 @@ public class TWeaponManager : MonoBehaviour
         fireRateTimer = 0;
 
         barrelPos.LookAt(aim.aimPos);
+        audioSource.PlayOneShot(gunshot);
         recoil.TriggerRecoil();
         ammo.currentAmmo--;
 

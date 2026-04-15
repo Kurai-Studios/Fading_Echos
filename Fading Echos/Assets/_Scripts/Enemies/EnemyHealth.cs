@@ -76,7 +76,7 @@ public class EnemyHealth : MonoBehaviour
 
     public void DamagePlayer()
     {
-        Player.GetComponent<THealthManager>().TakeDamage(20f);
+        Player.GetComponent<THealthManager>().TakeDamage(5f);
     }
 
     void EnemyDeath()

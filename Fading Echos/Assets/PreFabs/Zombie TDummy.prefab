@@ -2265,7 +2265,7 @@ MonoBehaviour:
   delayTimer: 5
   Player: {fileID: 0}
   detectionRange: 200
-  attackDistance: 3
+  attackDistance: 1
   attackInterval: 2
   isDead: 0
 --- !u!114 &8465826424480295422

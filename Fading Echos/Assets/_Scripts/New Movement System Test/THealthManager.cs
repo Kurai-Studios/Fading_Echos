@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class THealthManager : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class THealthManager : MonoBehaviour
 
     public float health = 100f;
     bool isDead = false;
+    public Image healthBar;
 
     private void Start()
     {
@@ -17,7 +19,8 @@ public class THealthManager : MonoBehaviour
     {
         if (isDead) return;
 
-        health -= damage; 
+        health -= damage;
+        healthBar.fillAmount = health / 100;
         Debug.Log("PLayer Health: " +  health);
 
         if (health <= 0)
