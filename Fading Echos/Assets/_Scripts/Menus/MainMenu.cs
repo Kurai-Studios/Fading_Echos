@@ -11,7 +11,7 @@ public class MainMenu : MonoBehaviour
     public void QuitGame()
     {
         Debug.Log("Game Quited");
-        //Application.Quit();
+        Application.Quit();
     }
 
     public void H2P()
